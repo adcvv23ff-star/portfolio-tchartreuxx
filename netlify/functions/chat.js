@@ -76,24 +76,23 @@ exports.handler = async (event) => {
     const answer = (msgData.data || []).find(m => m.type === "answer");
 
     return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json";
-      },
-      body: JSON.stringify({
-        reply: answer ? answer.content : "Xin lỗi, em chưa có phản hồi."
-      })
-    };
+  statusCode: 200,
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    reply: answer ? answer.content : "Xin lỗi, em chưa có phản hồi."
+  })
+};
 
   } catch (err) {
-    return {
-      statusCode: 500,
-      headers: {
-        "Content-Type": "application/json";
-      },
-      body: JSON.stringify({
-        reply: "Lỗi chatbot: " + err.message
-      })
-    };
-  }
+    
+  return {
+  statusCode: 500,
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    reply: "Lỗi chatbot: " + err.message
+  })
 };
