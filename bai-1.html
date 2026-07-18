@@ -90,13 +90,28 @@
   html.light .theme-toggle-btn .icon-sun { display: block; }
   html.light .theme-toggle-btn .icon-moon { display: none; }
 
-  #lightbox { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.88); display: none; align-items: center; justify-content: center; padding: 2rem 1rem; opacity: 0; transition: opacity .25s ease; }
+  #lightbox { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; padding: 1.5rem; opacity: 0; transition: opacity .25s ease; }
   #lightbox.open { display: flex; opacity: 1; }
-  #lightbox img { max-width: min(90vw, 900px); max-height: 82vh; width: auto; height: auto; border-radius: 1rem; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.6); transform: scale(.96); transition: transform .25s ease; }
-  #lightbox.open img { transform: scale(1); }
+  #lightbox .lb-stage { position: relative; max-width: min(92vw, 950px); max-height: 86vh; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+  #lightbox .lb-imgwrap { overflow: auto; max-width: 100%; max-height: 78vh; border-radius: 1rem; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.6); }
+  #lightbox img { display: block; max-width: min(92vw, 950px); max-height: 78vh; width: auto; height: auto; transform: scale(.96); transition: transform .25s ease; transform-origin: center; }
+  #lightbox.open img { transform: scale(var(--lb-zoom, 1)); }
   #lightbox .lb-caption { color: #fff; text-align: center; font-size: .8rem; opacity: .7; margin-top: .75rem; font-family: 'Inter', sans-serif; }
-  #lightbox .lb-close { position: absolute; top: 1.25rem; right: 1.25rem; width: 2.75rem; height: 2.75rem; border-radius: 9999px; background: rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; transition: background .2s ease, transform .2s ease; }
-  #lightbox .lb-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.08); }
+  #lightbox .lb-close, #lightbox .lb-nav, #lightbox .lb-zoom-btn { border-radius: 9999px; background: rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; transition: background .2s ease, transform .2s ease; }
+  #lightbox .lb-close:hover, #lightbox .lb-nav:hover, #lightbox .lb-zoom-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.08); }
+  #lightbox .lb-close { position: absolute; top: 1.25rem; right: 1.25rem; width: 2.75rem; height: 2.75rem; z-index: 2; }
+  #lightbox .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 3rem; height: 3rem; z-index: 2; }
+  #lightbox .lb-nav:hover { transform: translateY(-50%) scale(1.08); }
+  #lightbox .lb-prev { left: -0.25rem; }
+  #lightbox .lb-next { right: -0.25rem; }
+  #lightbox .lb-zoom-controls { position: absolute; bottom: 0.75rem; right: 0.25rem; display: flex; gap: .5rem; z-index: 2; }
+  #lightbox .lb-zoom-btn { width: 2.5rem; height: 2.5rem; font-size: 1.1rem; font-weight: 700; }
+  #lightbox .lb-counter { position: absolute; top: 1.4rem; left: 1.5rem; color: #fff; font-size: .75rem; opacity: .6; font-family: 'Space Grotesk', sans-serif; z-index: 2; }
+  @media (max-width: 640px) { #lightbox .lb-prev { left: 0.25rem; } #lightbox .lb-next { right: 0.25rem; } #lightbox .lb-nav { width: 2.4rem; height: 2.4rem; } }
+
+  .prose { --tw-prose-body: rgb(var(--color-ink) / 0.82) !important; --tw-prose-headings: rgb(var(--color-ink)) !important; --tw-prose-lead: rgb(var(--color-ink) / 0.85) !important; --tw-prose-links: #EC4899 !important; --tw-prose-bold: rgb(var(--color-ink)) !important; --tw-prose-counters: rgb(var(--color-ink) / 0.6) !important; --tw-prose-bullets: rgb(var(--color-ink) / 0.5) !important; --tw-prose-hr: rgb(var(--color-ink) / 0.15) !important; --tw-prose-quotes: rgb(var(--color-ink) / 0.9) !important; --tw-prose-quote-borders: rgb(var(--color-ink) / 0.2) !important; --tw-prose-captions: rgb(var(--color-ink) / 0.6) !important; --tw-prose-code: rgb(var(--color-ink)) !important; --tw-prose-th-borders: rgb(var(--color-ink) / 0.25) !important; --tw-prose-td-borders: rgb(var(--color-ink) / 0.12) !important; }
+  .prose li::marker { color: rgb(var(--color-ink) / 0.5) !important; }
+  .prose strong, .prose b { color: rgb(var(--color-ink)) !important; }
 </style>
 </head>
 <body class="bg-paper text-ink font-body antialiased">
@@ -265,21 +280,21 @@
   <div class="prose prose-invert prose-violet max-w-none prose-headings:font-display prose-strong:text-ink">
     <p><strong>1. Tạo thư mục mới: Nhấp chuột phải vào một khoảng trống -&gt; chọn New -&gt; Folder. Đặt tên thư mục là ThucHanh_hotensinhvien (ví dụ: ThucHanh_NguyenVanA). Nhấn Enter</strong></p>
     <div class="not-prose grid grid-cols-3 gap-2 my-4">
-      <img src="assets/bai1/image1.png" alt="Bước 1 - ảnh 1" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image1.png', 'Bước 1 - ảnh 1')" loading="lazy">
-      <img src="assets/bai1/image2.png" alt="Bước 1 - ảnh 2" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image2.png', 'Bước 1 - ảnh 2')" loading="lazy">
-      <img src="assets/bai1/image3.png" alt="Bước 1 - ảnh 3" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image3.png', 'Bước 1 - ảnh 3')" loading="lazy">
+      <img src="assets/bai1/image1.png" alt="Bước 1 - ảnh 1" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
+      <img src="assets/bai1/image2.png" alt="Bước 1 - ảnh 2" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
+      <img src="assets/bai1/image3.png" alt="Bước 1 - ảnh 3" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
     </div>
 
     <p><strong>2. Vào thư mục vừa tạo: Nhấp đúp vào thư mục ThucHanh_NguyenVanA.</strong></p>
-    <img src="assets/bai1/image4.png" alt="Bước 2" class="not-prose w-full aspect-video object-cover rounded-xl border border-ink/10 my-4 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image4.png', 'Bước 2')" loading="lazy">
+    <img src="assets/bai1/image4.png" alt="Bước 2" class="not-prose w-full aspect-video object-cover rounded-xl border border-ink/10 my-4 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
 
     <p><strong>3. Tạo tệp tin văn bản: Nhấp chuột phải vào khoảng trống -&gt; New -&gt; Text Document. Đặt tên là GhiChu.txt. Nhấn Enter</strong></p>
-    <img src="assets/bai1/image5.png" alt="Bước 3" class="not-prose w-full aspect-video object-cover rounded-xl border border-ink/10 my-4 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image5.png', 'Bước 3')" loading="lazy">
+    <img src="assets/bai1/image5.png" alt="Bước 3" class="not-prose w-full aspect-video object-cover rounded-xl border border-ink/10 my-4 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
 
     <p><strong>4.Đổi tên tệp tin: Nhấp chuột phải vào tệp GhiChu.txt -&gt; chọn Rename. Đổi tên thành GhiChuQuanTrong.txt. Nhấn Enter. + Tạo thư mục con: Trong thư mục ThucHanh_NguyenVanA, nhấp chuột phải -&gt; New -&gt; Folder. Đặt tên là TaiLieu.</strong></p>
     <div class="not-prose grid grid-cols-2 gap-2 my-4">
-      <img src="assets/bai1/image6.png" alt="Bước 4 - ảnh 1" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image6.png', 'Bước 4 - ảnh 1')" loading="lazy">
-      <img src="assets/bai1/image7.png" alt="Bước 4 - ảnh 2" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image7.png', 'Bước 4 - ảnh 2')" loading="lazy">
+      <img src="assets/bai1/image6.png" alt="Bước 4 - ảnh 1" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
+      <img src="assets/bai1/image7.png" alt="Bước 4 - ảnh 2" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
     </div>
 
     <p><strong>5.Di chuyển tệp tin (Cut &amp; Paste):</strong></p>
@@ -288,21 +303,21 @@
       <li>Nhấp chuột phải vào tệp DiChuyen.txt -&gt; chọn Cut (hoặc chọn tệp rồi nhấn Ctrl + X).</li>
       <li>Nhấp đúp vào thư mục TaiLieu, nhấp chuột phải vào khoảng trống -&gt; chọn Paste (hoặc nhấn Ctrl + V). Tệp gốc đã biến mất khỏi vị trí cũ và chỉ còn ở vị trí mới.</li>
     </ul>
-    <img src="assets/bai1/image8.png" alt="Bước 5" class="not-prose w-full aspect-video object-cover rounded-xl border border-ink/10 my-4 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image8.png', 'Bước 5')" loading="lazy">
+    <img src="assets/bai1/image8.png" alt="Bước 5" class="not-prose w-full aspect-video object-cover rounded-xl border border-ink/10 my-4 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
 
     <p><strong>6.Xóa tệp tin: Trong thư mục TaiLieu, nhấp chuột phải vào tệp GhiChuQuanTrong.txt -&gt; chọn Delete. Tệp sẽ được chuyển vào Thùng rác (Recycle Bin)</strong></p>
-    <img src="assets/bai1/image9.png" alt="Bước 6" class="not-prose w-full aspect-video object-cover rounded-xl border border-ink/10 my-4 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image9.png', 'Bước 6')" loading="lazy">
+    <img src="assets/bai1/image9.png" alt="Bước 6" class="not-prose w-full aspect-video object-cover rounded-xl border border-ink/10 my-4 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
 
     <p><strong>7. Xóa vĩnh viễn: Chọn tệp DiChuyen.txt, nhấn giữ phím Shift và nhấn phím Delete. Một cảnh báo sẽ hiện ra. Nếu đồng ý, tệp sẽ bị xóa vĩnh viễn mà không qua Thùng rác.</strong></p>
     <div class="not-prose grid grid-cols-2 gap-2 my-4">
-      <img src="assets/bai1/image10.png" alt="Bước 7 - ảnh 1" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image10.png', 'Bước 7 - ảnh 1')" loading="lazy">
-      <img src="assets/bai1/image11.png" alt="Bước 7 - ảnh 2" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image11.png', 'Bước 7 - ảnh 2')" loading="lazy">
+      <img src="assets/bai1/image10.png" alt="Bước 7 - ảnh 1" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
+      <img src="assets/bai1/image11.png" alt="Bước 7 - ảnh 2" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
     </div>
 
     <p><strong>8. Khôi phục từ Thùng rác (Tùy chọn): Tìm biểu tượng Recycle Bin trên màn hình nền, nhấp đúp để mở. Tìm tệp GhiChuQuanTrong.txt đã xóa, nhấp chuột phải vào nó và chọn Restore. Tệp sẽ quay trở lại vị trí ban đầu.</strong></p>
     <div class="not-prose grid grid-cols-2 gap-2 my-4">
-      <img src="assets/bai1/image12.png" alt="Bước 8 - ảnh 1" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image12.png', 'Bước 8 - ảnh 1')" loading="lazy">
-      <img src="assets/bai1/image13.png" alt="Bước 8 - ảnh 2" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity" onclick="openLightbox('assets/bai1/image13.png', 'Bước 8 - ảnh 2')" loading="lazy">
+      <img src="assets/bai1/image12.png" alt="Bước 8 - ảnh 1" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
+      <img src="assets/bai1/image13.png" alt="Bước 8 - ảnh 2" class="w-full aspect-video object-cover rounded-xl border border-ink/10 cursor-zoom-in hover:opacity-90 transition-opacity lb-trigger" loading="lazy">
     </div>
   </div>
 
@@ -369,31 +384,98 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 </script>
 <div id="lightbox" onclick="if(event.target===this) closeLightbox()">
+  <span class="lb-counter" id="lightboxCounter"></span>
   <button class="lb-close" onclick="closeLightbox()" aria-label="Đóng">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
   </button>
-  <div>
-    <img id="lightboxImg" src="" alt="">
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)" aria-label="Ảnh trước">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+  </button>
+  <button class="lb-nav lb-next" onclick="lbNav(1)" aria-label="Ảnh sau">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <div class="lb-stage">
+    <div class="lb-imgwrap">
+      <img id="lightboxImg" src="" alt="">
+    </div>
     <p class="lb-caption" id="lightboxCaption"></p>
+    <div class="lb-zoom-controls">
+      <button class="lb-zoom-btn" onclick="lbZoom(-1)" aria-label="Thu nhỏ">−</button>
+      <button class="lb-zoom-btn" onclick="lbZoom(1)" aria-label="Phóng to">+</button>
+    </div>
   </div>
 </div>
 
 <script>
-  function openLightbox(src, caption) {
-    const lb = document.getElementById('lightbox');
-    document.getElementById('lightboxImg').src = src;
-    document.getElementById('lightboxImg').alt = caption || '';
-    document.getElementById('lightboxCaption').textContent = caption || '';
-    lb.classList.add('open');
-    document.body.style.overflow = 'hidden';
+(() => {
+  let lbGallery = [];
+  let lbIndex = 0;
+  let lbZoomLevel = 1;
+
+  function collectGallery() {
+    lbGallery = Array.from(document.querySelectorAll('img.lb-trigger')).map(img => ({
+      src: img.getAttribute('src'),
+      alt: img.getAttribute('alt') || ''
+    }));
   }
-  function closeLightbox() {
+
+  function renderLightbox() {
+    const item = lbGallery[lbIndex];
+    if (!item) return;
+    const imgEl = document.getElementById('lightboxImg');
+    imgEl.src = item.src;
+    imgEl.alt = item.alt;
+    document.getElementById('lightboxCaption').textContent = item.alt;
+    document.getElementById('lightboxCounter').textContent = (lbIndex + 1) + ' / ' + lbGallery.length;
+    lbZoomLevel = 1;
+    document.getElementById('lightbox').style.setProperty('--lb-zoom', 1);
+    const multi = lbGallery.length > 1;
+    document.querySelector('.lb-prev').style.display = multi ? 'flex' : 'none';
+    document.querySelector('.lb-next').style.display = multi ? 'flex' : 'none';
+  }
+
+  window.openLightbox = function(triggerEl) {
+    collectGallery();
+    const clickedSrc = triggerEl.getAttribute('src');
+    lbIndex = lbGallery.findIndex(g => g.src === clickedSrc);
+    if (lbIndex < 0) lbIndex = 0;
+    renderLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeLightbox = function() {
     document.getElementById('lightbox').classList.remove('open');
     document.body.style.overflow = '';
-  }
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeLightbox();
+  };
+
+  window.lbNav = function(dir) {
+    if (!lbGallery.length) return;
+    lbIndex = (lbIndex + dir + lbGallery.length) % lbGallery.length;
+    renderLightbox();
+  };
+
+  window.lbZoom = function(dir) {
+    lbZoomLevel = Math.min(3, Math.max(1, lbZoomLevel + dir * 0.4));
+    document.getElementById('lightbox').style.setProperty('--lb-zoom', lbZoomLevel);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('img.lb-trigger').forEach(img => {
+      img.addEventListener('click', () => openLightbox(img));
+    });
   });
+
+  document.addEventListener('keydown', (e) => {
+    const lb = document.getElementById('lightbox');
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lbNav(-1);
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === '+' || e.key === '=') lbZoom(1);
+    if (e.key === '-') lbZoom(-1);
+  });
+})();
 </script>
 </body>
 </html>
