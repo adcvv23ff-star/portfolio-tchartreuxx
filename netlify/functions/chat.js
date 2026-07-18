@@ -85,16 +85,15 @@ exports.handler = async (event) => {
   })
 };
 
-  } catch (err) {
-    
+ } catch (err) {
   return {
-  statusCode: 500,
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    reply: "Lỗi chatbot: " + err.message
-  })
-};
-  }
+    statusCode: 500,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      reply: "Lỗi chatbot: " + err.message
+    })
+  };
+}
 };
