@@ -104,7 +104,7 @@
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19V5m0 0l-6 6m6-6l6 6"/></svg>
     </button>
   </form>
-  <p class="chat-disclaimer">Bản demo giao diện — chưa kết nối AI thật</p>
+  <p class="chat-disclaimer">Lucia được hỗ trợ bởi AI và chỉ trả lời nội dung trong portfolio</p>
 </div>
 
 <script>
@@ -160,53 +160,46 @@
   //
   // Sau đó gọi `await getReply(text)` thay cho `getDemoReply(text)` ở hàm sendMessage().
   // ══════════════════════════════════════════════════════════════
-  function getDemoReply(text) {
-    const q = text.toLowerCase();
-    if (q.includes('giới thiệu') || q.includes('là ai') || q.includes('sinh viên')) {
-      return 'Dạ thưa Thầy/Cô, em xin giới thiệu ngắn gọn về sinh viên Nguyễn Bảo Trung: bạn là sinh viên khoa Ngôn ngữ và Văn hóa Anh, Trường Đại học Ngoại ngữ – ĐHQGHN, MSSV 25041189. Portfolio được thực hiện cho học phần Nhập môn Công nghệ số và Trí tuệ nhân tạo, gồm 6 bài thực hành trong 6 tuần ạ.';
-    }
-    if (q.includes('điểm') || q.includes('chấm')) {
-      return 'Dạ thưa Thầy/Cô, việc đánh giá và cho điểm là thẩm quyền của Thầy/Cô nên em xin phép không đưa ra nhận định này ạ. Em có thể hỗ trợ Thầy/Cô đối chiếu nhanh nội dung bài làm với các tiêu chí Thầy/Cô đang quan tâm ạ.';
-    }
-    if (q.includes('bài 1') || q.includes('thư mục') || q.includes('tệp')) {
-      return 'Dạ thưa Thầy/Cô, Bài 1 thực hành 8 thao tác quản lý tệp/thư mục trên Windows: tạo, đổi tên, di chuyển (Cut & Paste), xoá, xoá vĩnh viễn và khôi phục từ Recycle Bin ạ.';
-    }
-    if (q.includes('bài 2') || q.includes('nguồn') || q.includes('hallyu')) {
-      return 'Dạ thưa Thầy/Cô, Bài 2 là báo cáo nghiên cứu về Làn sóng Hàn Quốc (Hallyu), thu thập 12 tài liệu chất lượng cao (gồm 7 bài báo khoa học có bình duyệt), đánh giá theo 5 tiêu chí: Tác giả, Cơ quan xuất bản, Phương pháp nghiên cứu, Chỉ số trích dẫn và Tính cập nhật ạ.';
-    }
-    if (q.includes('bài 3') || q.includes('prompt')) {
-      return 'Dạ thưa Thầy/Cô, Bài 3 thực hành Prompt Engineering qua 3 tác vụ (tóm tắt tài liệu, giải thích khái niệm, tạo câu hỏi ôn tập), mỗi tác vụ thử ở 3 cấp độ prompt: cơ bản, cải tiến và nâng cao ạ.';
-    }
-    if (q.includes('bài 4') || q.includes('nhóm') || q.includes('trello')) {
-      return 'Dạ thưa Thầy/Cô, Bài 4 là báo cáo cá nhân về điều phối dự án nhóm "Ứng dụng AI trong bán hàng online", sử dụng Trello, Google Docs, Drive và Meet, cùng 2 thách thức thực tế đã gặp và cách xử lý ạ.';
-    }
-    if (q.includes('bài 5') || q.includes('infographic') || q.includes('canva')) {
-      return 'Dạ thưa Thầy/Cô, Bài 5 kết hợp ChatGPT, Microsoft Designer và Canva AI để xây dựng infographic "Ứng dụng AI trong học tập của sinh viên", với khoảng 40% nội dung do AI hỗ trợ và hơn 60% là chỉnh sửa của sinh viên ạ.';
-    }
-    if (q.includes('bài 6') || q.includes('liêm chính') || q.includes('trách nhiệm')) {
-      return 'Dạ thưa Thầy/Cô, Bài 6 trình bày 7 nguyên tắc cá nhân khi sử dụng AI có trách nhiệm trong học thuật, dựa trên chính sách định hướng của ĐHQGHN ạ.';
-    }
-    return 'Dạ thưa Thầy/Cô, câu hỏi này nằm ngoài phạm vi nội dung 6 bài thực hành trong Portfolio nên em xin phép chưa thể hỗ trợ ạ. Thầy/Cô có thể hỏi em về Bài 1 đến Bài 6, hoặc phần Giới thiệu và Tổng kết ạ.';
-  }
+   async function getReply(text) {
+    console.log("GET REPLY ĐÃ CHẠY");
 
-  async function sendMessage(text) {
+    const res = await fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: text
+        })
+    });
+
+    const data = await res.json();
+    return data.reply;
+}
+
+async function sendMessage(text) {
     if (!text.trim()) return;
+
     addBubble(text, 'user');
     input.value = '';
+
     const typingEl = showTyping();
     await new Promise(r => setTimeout(r, 700 + Math.random() * 500));
     typingEl.remove();
-    const reply = getDemoReply(text); // <-- thay bằng: await getReply(text)
-    addBubble(reply, 'bot');
-  }
 
-  form.addEventListener('submit', (e) => {
+    const reply = await getReply(text);
+    addBubble(reply, 'bot');
+}
+
+form.addEventListener('submit', (e) => {
     e.preventDefault();
     sendMessage(input.value);
-  });
+});
 
-  quickWrap.querySelectorAll('button').forEach(btn => {
+quickWrap.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => sendMessage(btn.textContent));
-  });
+});
+
+// ĐÓNG HÀM TỰ CHẠY
 })();
 </script>
